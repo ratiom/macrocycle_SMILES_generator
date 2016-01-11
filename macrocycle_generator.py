@@ -13,7 +13,7 @@ from collections import Counter
 
 
 '''
-'al': 	    {'Code': '',
+'al':         {'Code': '',
                 'SMILES': '',
                 },
 '''
@@ -31,7 +31,7 @@ resi_all = resi_al + resi_ad + resi_bl # Combine families of residues into one l
 # Possible amino acids for use 
 
 aminos = {
-'al2': 	    {'Code': 'Gly',
+'al2':         {'Code': 'Gly',
                 'SMILES': 'NCC(=O)O',
                 },
 'al3':          {'Code': 'L-Ala',
@@ -40,13 +40,13 @@ aminos = {
 'al4':          {'Code': 'L-Arg',
                 'SMILES': 'N[C@@]([H])(CCCNC(=N)N)C(=O)O'
                 },
-'al14': 	    {'Code': 'L-Phe',
+'al14':         {'Code': 'L-Phe',
                 'SMILES': 'N[C@@]([H])(Cc1ccccc1)C(=O)O',
                 },
-'al21': 	    {'Code': 'L-hPhe',
+'al21':         {'Code': 'L-hPhe',
                 'SMILES': 'N[C@@]([H])(CCc1ccccc1)C(=O)O',
                 },                
-'al15': 	    {'Code': 'L-Pro',
+'al15':         {'Code': 'L-Pro',
                 'SMILES': 'N1[C@@]([H])(CCC1)C(=O)O',
                 },                
 'ad1':          {'Code': 'D-Ala',
@@ -55,25 +55,25 @@ aminos = {
 'ad2':          {'Code': 'D-Arg',
                 'SMILES': 'N[C@]([H])(CCCNC(=N)N)C(=O)O',
                 },
-'ad14': 	    {'Code': 'D-Phe',
+'ad14':         {'Code': 'D-Phe',
                 'SMILES': 'N[C@]([H])(Cc1ccccc1)C(=O)O',
                 },
 'bl1':          {'Code': 'b-Ala',
                  'SMILES': 'NCCC(=O)O'
                 },
-'nl1': 	    {'Code': 'NMe-L-Ala',
+'nl1':         {'Code': 'NMe-L-Ala',
                 'SMILES': 'N(C)[C@@]([H])(C)C(=O)O',
                 },                
-'nd1': 	    {'Code': 'NMe-D-Ala',
+'nd1':         {'Code': 'NMe-D-Ala',
                 'SMILES': 'N(C)[C@]([H])(C)C(=O)O',
                 },
-'link1':     {'Code': 'Link_SSS',
+'link1':        {'Code': 'Link_SSS',
                 'SMILES': 'N[C@@H](C)[C@H]5(C(=O)NC(C)(C)C)',
                 },
-'link2':     {'Code': 'Link_SRS',
+'link2':        {'Code': 'Link_SRS',
                 'SMILES': 'N[C@H](C)[C@H]5(C(=O)NC(C)(C)C)',
                 },
-'link3':     {'Code': 'Link_SRR',
+'link3':        {'Code': 'Link_SRR',
                 'SMILES': 'N[C@H](C)[C@@H]5(C(=O)NC(C)(C)C)',
                 }
 }
@@ -97,22 +97,28 @@ ranges = [5,6]
 nonX = ['F', 'f', 'H']
 for i in 
 '''
+lengths = [4,5]
+nonX = ['F', 'f', 'H']  # Careful: This assumes 2/3 will be used. Could be 1/3.
+                        # Will affect the number of X's below
 
-letters_Ff3 = ['F','f','X']
-letters_Ff4 = ['F','f','X','X']
-letters_Ff5 = ['F','f','X','X', 'X']
-letters_FF3 = ['F','F','X']
-letters_FF4 = ['F','F','X','X']
-letters_FF5 = ['F','F','X','X', 'X']
-letters_FH3 = ['F','H','X']
-letters_FH4 = ['F','H','X','X']
-letters_FH5 = ['F','H','X','X', 'X']
-letters_all = [letters_Ff3, letters_Ff4, letters_Ff5, letters_FF3, letters_FF4, letters_FF5, letters_FH3, letters_FH4, letters_FH5]
-
-
-def patternGen(letters_all):
+def patternGen2(a, b, how_many_NonX=3):
+    letters_all = []
+    for residues in itertools.product(nonX, repeat = how_many_NonX):
+        for i in lengths:
+            pep=list(residues)
+            li = []
+            li=['X'] * (i-1 -(how_many_NonX))
+            pep.extend(li)
+            letters_all.append(pep)
+            print pep
+            del pep
+    return letters_all
+    
+    
+def patternGen(a):
     patterns = []
     for i in letters_all:
+        print i
         keywords = ['P'+''.join(j) for j in itertools.product(i, repeat = len(i))]
         keywords2 = [q for q in keywords if q.count('F') == 1 and q.count('f') == 1]
         holding_count = Counter(keywords)
@@ -159,12 +165,17 @@ def molGen(peptides):
             mol = (cyclic, cycSeq)
             cycles.append(mol)
     return cycles
+
+
+letters_all = patternGen2(lengths, nonX)
      
-patternGen(letters_all)
-pepGen(resi_all, holding, aminos, patterns)
-molGen(peptides)
+patterns = patternGen(letters_all)
+
+peptides = pepGen(resi_all, holding, aminos, patterns)
+
+cycles = molGen(peptides)
    
-sampled_cycles = random.sample(cycles, 5000) # Select random subset of the peptide list
+sampled_cycles = random.sample(cycles, len(cycles)/10 if len(cycles)/10 <= 5000 else 5000) # Select random subset of the peptide list
 
 
 #############
