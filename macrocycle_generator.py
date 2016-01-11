@@ -86,12 +86,12 @@ holding = {'P': 'al15', # L-Pro
            'f': 'ad14'  # D-Phe
            }
 
-lengths = [4,6] # What the desired sequences should look like
+lengths = [5,6] # What the desired sequences should look like
                 # i.e. PFXX is 4; PFXXX is 5 etc.
 
 nonX = ['F', 'f', 'H']  # What static residues will be appearing
 
-how_many_NonX = 3
+how_many_NonX = 1
                         
 def patternGen2(a, b):
     letters_all = []
@@ -111,7 +111,7 @@ def patternGen2(a, b):
 def patternGen(a):
     patterns = []
     for i in letters_all:
-        keywords = ['P'+''.join(j) for j in itertools.product(i, repeat = len(i)) if len(i) > how_many_NonX]
+        keywords = ['P'+''.join(j) for j in itertools.product(i, repeat = len(i))]
         
         for y in keywords:
             
