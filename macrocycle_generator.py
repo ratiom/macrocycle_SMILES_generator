@@ -101,7 +101,7 @@ lengths = [4,5]
 nonX = ['F', 'f', 'H']  # Careful: This assumes 2/3 will be used. Could be 1/3.
                         # Will affect the number of X's below
 
-def patternGen2(a, b, how_many_NonX=3):
+def patternGen2(a, b, how_many_NonX=2):
     letters_all = []
     for residues in itertools.product(nonX, repeat = how_many_NonX):
         for i in lengths:
@@ -110,20 +110,29 @@ def patternGen2(a, b, how_many_NonX=3):
             li=['X'] * (i-1 -(how_many_NonX))
             pep.extend(li)
             letters_all.append(pep)
-            print pep
+            #print pep
             del pep
     return letters_all
+
     
     
 def patternGen(a):
     patterns = []
     for i in letters_all:
-        print i
         keywords = ['P'+''.join(j) for j in itertools.product(i, repeat = len(i))]
-        keywords2 = [q for q in keywords if q.count('F') == 1 and q.count('f') == 1]
-        holding_count = Counter(keywords)
-        #keywords2 = [q for q in keywords if q.count('F')  < 3]
-        patterns = patterns + keywords2
+        for y in keywords:
+            keywords2=[]
+            
+            hell_no = len([t for t in y if t in nonX])
+            
+            print str(hell_no) + 'hell no'
+            
+            if hell_no == how_many_NonX:
+                keywords2.append(y)
+            else:
+                pass
+           
+            patterns = patterns + keywords2
     return patterns
 
 
@@ -141,7 +150,7 @@ def pepGen(resi_all, holding, aminos, patterns):
             
             sequence = [aminos[w]['Code'] for w in outpep]
             sequence = ','.join(sequence)
-            print sequence
+            #print sequence
             if len([i for i in outpep if i in resi_nl]) < 3 and len([i for i in outpep if i in resi_bl]) < 3:
                 peptides.append((outpep,sequence))
             else:
@@ -158,7 +167,7 @@ def molGen(peptides):
             linear_smiles.append(aminos[j]['SMILES'][:-1])
         linear = ''.join(linear_smiles)
         
-        for v in range(1,3):
+        for v in range(1,4):
             cyclic = linear + aminos['link'+str(v)]['SMILES'] #Add on the linker SMILES
             cyclic = re.sub(r'^N1', r'N15', cyclic) #Adjust the SMILES to install the ring at Pro-N
             cycSeq = linSeq + ',' + aminos['link'  + str(v)]['Code'] #Add the linker code
@@ -168,6 +177,7 @@ def molGen(peptides):
 
 
 letters_all = patternGen2(lengths, nonX)
+how_many_NonX = 2
      
 patterns = patternGen(letters_all)
 
