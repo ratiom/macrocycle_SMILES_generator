@@ -85,23 +85,15 @@ holding = {'P': 'al15', # L-Pro
            'H': "al21", # L-homoPhe
            'f': 'ad14'  # D-Phe
            }
-'''
-Generate list
-Give list non-X elems
-Give possible lengths, i.e. 5 (PFXXX), 6 (PXFXXX)
-Loop through range of lengths, to generate lists with #X = length - len(non-X)
-List
 
-li = []
-ranges = [5,6]
-nonX = ['F', 'f', 'H']
-for i in 
-'''
-lengths = [4,5]
-nonX = ['F', 'f', 'H']  # Careful: This assumes 2/3 will be used. Could be 1/3.
-                        # Will affect the number of X's below
+lengths = [4,6] # What the desired sequences should look like
+                # i.e. PFXX is 4; PFXXX is 5 etc.
 
-def patternGen2(a, b, how_many_NonX=3):
+nonX = ['F', 'f', 'H']  # What static residues will be appearing
+
+how_many_NonX = 3
+                        
+def patternGen2(a, b):
     letters_all = []
     for residues in itertools.product(nonX, repeat = how_many_NonX):
         for i in lengths:
@@ -176,7 +168,8 @@ def molGen(peptides):
 
 
 letters_all = patternGen2(lengths, nonX)
-how_many_NonX = 3
+
+
      
 patterns = patternGen(letters_all)
 
