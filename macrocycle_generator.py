@@ -9,7 +9,7 @@ import re
 import csv
 import os
 import random
-from collections import Counter
+
 
 
 '''
@@ -101,7 +101,7 @@ lengths = [4,5]
 nonX = ['F', 'f', 'H']  # Careful: This assumes 2/3 will be used. Could be 1/3.
                         # Will affect the number of X's below
 
-def patternGen2(a, b, how_many_NonX=2):
+def patternGen2(a, b, how_many_NonX=3):
     letters_all = []
     for residues in itertools.product(nonX, repeat = how_many_NonX):
         for i in lengths:
@@ -119,20 +119,19 @@ def patternGen2(a, b, how_many_NonX=2):
 def patternGen(a):
     patterns = []
     for i in letters_all:
-        keywords = ['P'+''.join(j) for j in itertools.product(i, repeat = len(i))]
+        keywords = ['P'+''.join(j) for j in itertools.product(i, repeat = len(i)) if len(i) > how_many_NonX]
+        
         for y in keywords:
-            keywords2=[]
             
-            hell_no = len([t for t in y if t in nonX])
+            check_nonX = len([t for t in y if t in nonX])
             
-            print str(hell_no) + 'hell no'
-            
-            if hell_no == how_many_NonX:
-                keywords2.append(y)
-            else:
+            if check_nonX != how_many_NonX:
                 pass
-           
-            patterns = patterns + keywords2
+            elif y in patterns:
+                pass
+            else:
+               patterns.append(y)
+             
     return patterns
 
 
@@ -177,7 +176,7 @@ def molGen(peptides):
 
 
 letters_all = patternGen2(lengths, nonX)
-how_many_NonX = 2
+how_many_NonX = 3
      
 patterns = patternGen(letters_all)
 
