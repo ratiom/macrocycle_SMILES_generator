@@ -107,7 +107,9 @@ def patternGen2(a, b):
     return letters_all
 
     
-    
+##########
+## To do: Need to construct some mechanism whereby certain positions can only hold certain residue
+##########    
 def patternGen(a):
     patterns = []
     for i in letters_all:
