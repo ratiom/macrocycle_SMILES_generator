@@ -19,18 +19,23 @@ import random
 '''
 #################
 # Picking the amino scids for use in the library
-resi_al = ["al2", "al3"] # alpha L-amino acids 
-resi_ad = ["ad1"] # alpha D-amino acids
+resi_al = ["al11", "al20"] # alpha L-amino acids 
+resi_ad = ["ad11", "ad20"] # alpha D-amino acids
 resi_bl = ["bl1"] # beta-amino acids
-resi_nl = ["nl1", "nd1"] # L- and D-amino acids
+resi_nl = ["nl11", "nd11", "nl20", "nd20"] # L- and D-amino acids
 
 
-resi_all = resi_al + resi_ad + resi_bl # Combine families of residues into one list
+resi_all = resi_al + resi_ad + resi_nl # Combine families of residues into one list
 
 ################
 # Possible amino acids for use 
 
+'''
+1 A, 8-G, 11 L, 14-F, 16-S, 17-T, 19-Y, 20-V
+'''
+
 aminos = {
+# L-Amino Acids
 'al2':         {'Code': 'Gly',
                 'SMILES': 'NCC(=O)O',
                 },
@@ -40,8 +45,28 @@ aminos = {
 'al4':          {'Code': 'L-Arg',
                 'SMILES': 'N[C@@]([H])(CCCNC(=N)N)C(=O)O'
                 },
+'al11':         {'Code': 'L-Leu',
+                 'Abb': 'L',
+                'SMILES': 'N[C@@]([H])(CC(C)C)C(=O)O',
+                },
 'al14':         {'Code': 'L-Phe',
                 'SMILES': 'N[C@@]([H])(Cc1ccccc1)C(=O)O',
+                },
+'al16':         {'Code': 'L-Ser',
+                 'Abb': 'S',
+                'SMILES': 'N[C@@]([H])(CO)C(=O)O',
+                },
+'al17':         {'Code': 'L-Thr',
+                 'Abb': 'T',
+                'SMILES': 'N[C@@]([H])([C@]([H])(O)C)C(=O)O',
+                },
+'al18':         {'Code': 'L-Tyr',
+                 'Abb': 'Y',
+                'SMILES': 'N[C@@]([H])(Cc1ccc(O)cc1)C(=O)O',
+                },
+'al20':         {'Code': 'L-Val',
+                 'Abb': 'V',
+                'SMILES': 'N[C@@]([H])(C(C)C)C(=O)O',
                 },
 'al21':         {'Code': 'L-hPhe',
                 'SMILES': 'N[C@@]([H])(CCc1ccccc1)C(=O)O',
@@ -49,24 +74,70 @@ aminos = {
 'al15':         {'Code': 'L-Pro',
                 'SMILES': 'N1[C@@]([H])(CCC1)C(=O)O',
                 },                
+
+# D-Amino Acids
 'ad1':          {'Code': 'D-Ala',
                'SMILES': 'N[C@]([H])(C)C(=O)O'
                 },
 'ad2':          {'Code': 'D-Arg',
                 'SMILES': 'N[C@]([H])(CCCNC(=N)N)C(=O)O',
                 },
+'ad11':         {'Code': 'D-Leu',
+                 'Abb': 'l',
+                'SMILES': 'N[C@]([H])(CC(C)C)C(=O)O',
+                },
 'ad14':         {'Code': 'D-Phe',
                 'SMILES': 'N[C@]([H])(Cc1ccccc1)C(=O)O',
                 },
+'ad15':         {'Code': 'D-Pro',
+                'SMILES': 'N1[C@]([H])(CCC1)C(=O)O',
+                },                
+'ad16':         {'Code': 'D-Ser',
+                 'Abb': 's',
+                'SMILES': 'N[C@]([H])(CO)C(=O)O',
+                },
+'ad17':         {'Code': 'D-Thr',
+                 'Abb': 't',
+                'SMILES': 'N[C@]([H])([C@@]([H])(O)C)C(=O)O',
+                },
+'ad18':         {'Code': 'D-Tyr',
+                 'Abb': 'y',
+                'SMILES': 'N[C@]([H])(Cc1ccc(O)cc1)C(=O)O',
+                },
+'ad20':         {'Code': 'D-Val',
+                 'Abb': 'v',
+                'SMILES': 'N[C@]([H])(C(C)C)C(=O)O',
+                },
+
+#Beta Amino Acids
 'bl1':          {'Code': 'b-Ala',
                  'SMILES': 'NCCC(=O)O'
                 },
+# N-Me Amino Acids
 'nl1':         {'Code': 'NMe-L-Ala',
                 'SMILES': 'N(C)[C@@]([H])(C)C(=O)O',
                 },                
+'nl11':         {'Code': 'NMe-L-Leu',
+                 'Abb': '-NMe-L-Leu-',
+                'SMILES': 'N(C)[C@@]([H])(CC(C)C)C(=O)O',
+                },
+'nl20':         {'Code': 'NMe-L-Val',
+                 'Abb': '-NMe-L-Val-',
+                'SMILES': 'N(C)[C@@]([H])(C(C)C)C(=O)O',
+                },
 'nd1':         {'Code': 'NMe-D-Ala',
                 'SMILES': 'N(C)[C@]([H])(C)C(=O)O',
                 },
+'nd11':         {'Code': 'NMe-D-Leu',
+                 'Abb': '-NMe-D-Leu-',
+                'SMILES': 'N(C)[C@]([H])(CC(C)C)C(=O)O',
+                },
+'nd20':         {'Code': 'NMe-L-Val',
+                 'Abb': '-NMe-L-Val-',
+                'SMILES': 'N(C)[C@]([H])(C(C)C)C(=O)O',
+                },
+
+#Linkers
 'link1':        {'Code': 'Link_SSS',
                 'SMILES': 'N[C@@H](C)[C@H]5(C(=O)NC(C)(C)C)',
                 },
@@ -75,21 +146,28 @@ aminos = {
                 },
 'link3':        {'Code': 'Link_SRR',
                 'SMILES': 'N[C@H](C)[C@@H]5(C(=O)NC(C)(C)C)',
+                },
+'link4':        {'Code': 'Link_SSR',
+                'SMILES': 'N[C@@H](C)[C@@H]5(C(=O)NC(C)(C)C)',
                 }
 }
 
 ########################
 #   These residues are the non-X residues in the patterns.
 holding = {'P': 'al15', # L-Pro
-           'F': "al14", # L-Phe
-           'H': "al21", # L-homoPhe
-           'f': 'ad14'  # D-Phe
+           'p': "ad15", # D-Phe
+           'S': "al16", # L-Ser
+           's': 'ad16', # D-Ser
+           'T': 'al17', # L-Thr
+           't': 'D-Thr', # D-Thr
+           'Y': 'L-Tyr', # L-Tyr
+           'y': 'D-Tyr', # D-Tyr
            }
 
-lengths = [5,6] # What the desired sequences should look like
+lengths = [5] # What the desired sequences should look like
                 # i.e. PFXX is 4; PFXXX is 5 etc.
 
-nonX = ['F', 'f', 'H']  # What static residues will be appearing
+nonX = ['S', 's', 'T', 't', 'Y', 'y']  # What static residues will be appearing
 
 how_many_NonX = 1
                         
@@ -160,7 +238,7 @@ def molGen(peptides):
             linear_smiles.append(aminos[j]['SMILES'][:-1])
         linear = ''.join(linear_smiles)
         
-        for v in range(1,4):
+        for v in range(1,5):
             cyclic = linear + aminos['link'+str(v)]['SMILES'] #Add on the linker SMILES
             cyclic = re.sub(r'^N1', r'N15', cyclic) #Adjust the SMILES to install the ring at Pro-N
             cycSeq = linSeq + ',' + aminos['link'  + str(v)]['Code'] #Add the linker code
