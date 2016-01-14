@@ -60,7 +60,7 @@ aminos = {
                  'Abb': 'T',
                 'SMILES': 'N[C@@]([H])([C@]([H])(O)C)C(=O)O',
                 },
-'al18':         {'Code': 'L-Tyr',
+'al19':         {'Code': 'L-Tyr',
                  'Abb': 'Y',
                 'SMILES': 'N[C@@]([H])(Cc1ccc(O)cc1)C(=O)O',
                 },
@@ -100,7 +100,7 @@ aminos = {
                  'Abb': 't',
                 'SMILES': 'N[C@]([H])([C@@]([H])(O)C)C(=O)O',
                 },
-'ad18':         {'Code': 'D-Tyr',
+'ad19':         {'Code': 'D-Tyr',
                  'Abb': 'y',
                 'SMILES': 'N[C@]([H])(Cc1ccc(O)cc1)C(=O)O',
                 },
@@ -138,16 +138,16 @@ aminos = {
                 },
 
 #Linkers
-'link1':        {'Code': 'Link_SSS',
+'link1':        {'Code': 'Link_SS',
                 'SMILES': 'N[C@@H](C)[C@H]5(C(=O)NC(C)(C)C)',
                 },
-'link2':        {'Code': 'Link_SRS',
+'link2':        {'Code': 'Link_RS',
                 'SMILES': 'N[C@H](C)[C@H]5(C(=O)NC(C)(C)C)',
                 },
-'link3':        {'Code': 'Link_SRR',
+'link3':        {'Code': 'Link_RR',
                 'SMILES': 'N[C@H](C)[C@@H]5(C(=O)NC(C)(C)C)',
                 },
-'link4':        {'Code': 'Link_SSR',
+'link4':        {'Code': 'Link_SR',
                 'SMILES': 'N[C@@H](C)[C@@H]5(C(=O)NC(C)(C)C)',
                 }
 }
@@ -159,9 +159,9 @@ holding = {'P': 'al15', # L-Pro
            'S': "al16", # L-Ser
            's': 'ad16', # D-Ser
            'T': 'al17', # L-Thr
-           't': 'D-Thr', # D-Thr
-           'Y': 'L-Tyr', # L-Tyr
-           'y': 'D-Tyr', # D-Tyr
+           't': 'ad17', # D-Thr
+           'Y': 'al19', # L-Tyr
+           'y': 'ad19', # D-Tyr
            }
 
 lengths = [5] # What the desired sequences should look like
@@ -192,7 +192,8 @@ def patternGen(a):
     patterns = []
     for i in letters_all:
         keywords = ['P'+''.join(j) for j in itertools.product(i, repeat = len(i))]
-        
+        key2 = ['p'+''.join(j) for j in itertools.product(i, repeat = len(i))]
+        keywords = keywords + key2
         for y in keywords:
             
             check_nonX = len([t for t in y if t in nonX])
@@ -222,7 +223,7 @@ def pepGen(resi_all, holding, aminos, patterns):
             sequence = [aminos[w]['Code'] for w in outpep]
             sequence = ','.join(sequence)
             #print sequence
-            if len([i for i in outpep if i in resi_nl]) < 3 and len([i for i in outpep if i in resi_bl]) < 3:
+            if len([i for i in outpep if i in resi_nl]) < 5 and len([i for i in outpep if i in resi_bl]) < 3:
                 peptides.append((outpep,sequence))
             else:
                 pass
@@ -267,5 +268,5 @@ os.chdir('C:\Users\Conor')
 smiles_file = open('macro_smiles_random.csv', 'w')
 smiles_writer = csv.writer(smiles_file)
 smiles_writer.writerow(['SMILES','title'])
-smiles_writer.writerows(sampled_cycles)
+smiles_writer.writerows(cycles)
 smiles_file.close()
