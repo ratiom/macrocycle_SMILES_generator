@@ -132,8 +132,8 @@ aminos = {
                  'Abb': '-NMe-D-Leu-',
                 'SMILES': 'N(C)[C@]([H])(CC(C)C)C(=O)O',
                 },
-'nd20':         {'Code': 'NMe-L-Val',
-                 'Abb': '-NMe-L-Val-',
+'nd20':         {'Code': 'NMe-D-Val',
+                 'Abb': '-NMe-D-Val-',
                 'SMILES': 'N(C)[C@]([H])(C(C)C)C(=O)O',
                 },
 
@@ -155,7 +155,7 @@ aminos = {
 ########################
 #   These residues are the non-X residues in the patterns.
 holding = {'P': 'al15', # L-Pro
-           'p': "ad15", # D-Phe
+           'p': "ad15", # D-Pro
            'S': "al16", # L-Ser
            's': 'ad16', # D-Ser
            'T': 'al17', # L-Thr
@@ -188,12 +188,15 @@ def patternGen2(a, b):
 ##########
 ## To do: Need to construct some mechanism whereby certain positions can only hold certain residue
 ##########    
-def patternGen(a):
+def patternGen(letters_all):
+    '''
+    Generates
+    '''
     patterns = []
     for i in letters_all:
         keywords = ['P'+''.join(j) for j in itertools.product(i, repeat = len(i))]
-        key2 = ['p'+''.join(j) for j in itertools.product(i, repeat = len(i))]
-        keywords = keywords + key2
+        keywords2 = ['p'+''.join(j) for j in itertools.product(i, repeat = len(i))]
+        keywords = keywords + keywords2
         for y in keywords:
             
             check_nonX = len([t for t in y if t in nonX])
@@ -248,9 +251,10 @@ def molGen(peptides):
     return cycles
 
 
+########################
+# Main execution section
+########################
 letters_all = patternGen2(lengths, nonX)
-
-
      
 patterns = patternGen(letters_all)
 
@@ -265,7 +269,7 @@ sampled_cycles = random.sample(cycles, len(cycles)/10 if len(cycles)/10 <= 5000 
 ### Write list of peptides to CSV
         
 os.chdir('C:\Users\Conor')
-smiles_file = open('macro_smiles_random.csv', 'w')
+smiles_file = open('20160114_macro_smiles_[SsTtYy][LlVv]_2.csv', 'wb') # b
 smiles_writer = csv.writer(smiles_file)
 smiles_writer.writerow(['SMILES','title'])
 smiles_writer.writerows(cycles)
