@@ -19,31 +19,31 @@ import random
 '''
 #################
 # Picking the amino scids for use in the library
-resi_al = ["al11", "al20"] # alpha L-amino acids 
-resi_ad = ["ad11", "ad20"] # alpha D-amino acids
+resi_al = ["al11", 'al14', "al20"] # alpha L-amino acids 
+resi_ad = ["ad11", 'al14', "ad20"] # alpha D-amino acids
 resi_bl = ["bl1"] # beta-amino acids
 resi_nl = ["nl11", "nd11", "nl20", "nd20"] # L- and D-amino acids
 
 
-resi_all = resi_al + resi_ad + resi_nl # Combine families of residues into one list
+resi_all = resi_al + resi_ad + resi_bl # Combine families of residues into one list
 
 ################
 # Possible amino acids for use 
 
 '''
-1 A, 8-G, 11 L, 14-F, 16-S, 17-T, 19-Y, 20-V
+1 A, 2-R, 8-G, 11 L, 14-F, 16-S, 17-T, 18-W, 19-Y, 20-V
 '''
 
 aminos = {
 # L-Amino Acids
-'al2':         {'Code': 'Gly',
-                'SMILES': 'NCC(=O)O',
-                },
 'al3':          {'Code': 'L-Ala',
                'SMILES': 'N[C@@]([H])(C)C(=O)O'
                 },
 'al4':          {'Code': 'L-Arg',
                 'SMILES': 'N[C@@]([H])(CCCNC(=N)N)C(=O)O'
+                },
+'al8':          {'Code': 'Gly',
+                'SMILES': 'NCC(=O)O',
                 },
 'al11':         {'Code': 'L-Leu',
                  'Abb': 'L',
@@ -59,6 +59,10 @@ aminos = {
 'al17':         {'Code': 'L-Thr',
                  'Abb': 'T',
                 'SMILES': 'N[C@@]([H])([C@]([H])(O)C)C(=O)O',
+                },
+'al18':         {'Code': 'L-Trp',
+                 'Abb': 'W',
+                'SMILES': 'N[C@@]([H])(CC(=CN2)C1=C2C=CC=C1)C(=O)O',
                 },
 'al19':         {'Code': 'L-Tyr',
                  'Abb': 'Y',
@@ -99,6 +103,10 @@ aminos = {
 'ad17':         {'Code': 'D-Thr',
                  'Abb': 't',
                 'SMILES': 'N[C@]([H])([C@@]([H])(O)C)C(=O)O',
+                },
+'ad18':         {'Code': 'D-Trp',
+                 'Abb': 'w',
+                'SMILES': 'N[C@]([H])(CC(=CN2)C1=C2C=CC=C1)C(=O)O',
                 },
 'ad19':         {'Code': 'D-Tyr',
                  'Abb': 'y',
@@ -158,18 +166,16 @@ holding = {'P': 'al15', # L-Pro
            'p': "ad15", # D-Pro
            'S': "al16", # L-Ser
            's': 'ad16', # D-Ser
-           'T': 'al17', # L-Thr
-           't': 'ad17', # D-Thr
-           'Y': 'al19', # L-Tyr
-           'y': 'ad19', # D-Tyr
+           'W': 'al18', # L-Trp
+           'w': 'ad18', # D-Trp
            }
 
-lengths = [5] # What the desired sequences should look like
+lengths = [2,3] # What the desired sequences should look like
                 # i.e. PFXX is 4; PFXXX is 5 etc.
 
-nonX = ['S', 's', 'T', 't', 'Y', 'y']  # What static residues will be appearing
+nonX = []  # Change - What static residues will be appearing
 
-how_many_NonX = 1
+how_many_NonX = 0 # Change
                         
 def patternGen2(a, b):
     letters_all = []
@@ -194,8 +200,8 @@ def patternGen(letters_all):
     '''
     patterns = []
     for i in letters_all:
-        keywords = ['P'+''.join(j) for j in itertools.product(i, repeat = len(i))]
-        keywords2 = ['p'+''.join(j) for j in itertools.product(i, repeat = len(i))]
+        keywords = ['Pssw'+''.join(j) for j in itertools.product(i, repeat = len(i))]
+        keywords2 = ['pssw'+''.join(j) for j in itertools.product(i, repeat = len(i))]
         keywords = keywords + keywords2
         for y in keywords:
             
@@ -269,7 +275,7 @@ sampled_cycles = random.sample(cycles, len(cycles)/10 if len(cycles)/10 <= 5000 
 ### Write list of peptides to CSV
         
 os.chdir('C:\Users\Conor')
-smiles_file = open('20160114_macro_smiles_[SsTtYy][LlVv]_2.csv', 'wb') # b
+smiles_file = open('20160118_macro_smiles_08_PsswX.csv', 'wb') # b
 smiles_writer = csv.writer(smiles_file)
 smiles_writer.writerow(['SMILES','title'])
 smiles_writer.writerows(cycles)
