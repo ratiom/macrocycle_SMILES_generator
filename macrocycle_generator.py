@@ -164,6 +164,8 @@ aminos = {
 #   These residues are the non-X residues in the patterns.
 holding = {'P': 'al15', # L-Pro
            'p': "ad15", # D-Pro
+           'L': 'al11', #L-Leu
+           'l': 'ad11', # d-Leu
            'S': "al16", # L-Ser
            's': 'ad16', # D-Ser
            'W': 'al18', # L-Trp
@@ -200,8 +202,8 @@ def patternGen(letters_all):
     '''
     patterns = []
     for i in letters_all:
-        keywords = ['Pssw'+''.join(j) for j in itertools.product(i, repeat = len(i))]
-        keywords2 = ['pssw'+''.join(j) for j in itertools.product(i, repeat = len(i))]
+        keywords = ['Lssw'+''.join(j) for j in itertools.product(i, repeat = len(i))]
+        keywords2 = ['lssw'+''.join(j) for j in itertools.product(i, repeat = len(i))]
         keywords = keywords + keywords2
         for y in keywords:
             
@@ -242,6 +244,7 @@ def pepGen(resi_all, holding, aminos, patterns):
 
 def molGen(peptides):
     cycles = []
+    bicycles = ['al15', 'ad15']
     for peptide,linSeq in peptides:
         linear_smiles = []
         for j in peptide:
@@ -250,7 +253,10 @@ def molGen(peptides):
         
         for v in range(1,5):
             cyclic = linear + aminos['link'+str(v)]['SMILES'] #Add on the linker SMILES
-            cyclic = re.sub(r'^N1', r'N15', cyclic) #Adjust the SMILES to install the ring at Pro-N
+            if peptide[0] not in bicycles:
+                cyclic = re.sub(r'^N', r'N5', cyclic) #Adjust the SMILES to install the ring at Non-Pro-N
+            else:
+                cyclic = re.sub(r'^N1', r'N15', cyclic) #Adjust the SMILES to install the ring at Pro-N
             cycSeq = linSeq + ',' + aminos['link'  + str(v)]['Code'] #Add the linker code
             mol = (cyclic, cycSeq)
             cycles.append(mol)
